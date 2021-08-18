@@ -33,8 +33,6 @@ class Feature
             return self::allIsOn();
         }
 
-        info(Db::enabledForByName($feature, $roles));
-
         return Db::enabledForByName($feature, $roles);
     }
 }
