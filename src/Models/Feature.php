@@ -35,7 +35,7 @@ class Feature extends Model
     public function setNameAttribute(string $value)
     {
         $value = str_replace(' ', '_', $value);
-        $this->attributes['name'] = Str::of($value)->lower()->snake();
+        $this->attributes['name'] = (string) Str::of($value)->lower()->snake();
     }
 
     /**

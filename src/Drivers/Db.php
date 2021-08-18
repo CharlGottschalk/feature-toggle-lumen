@@ -55,9 +55,6 @@ class Db implements DriverInterface
     {
         $featureRoles = $feature->roles->pluck(config('features.roles.column'))->toArray();
 
-        info($featureRoles);
-        info($roles);
-
         if (empty($roles)) {
             $roles = self::getUserRole(auth()->user());
         }
