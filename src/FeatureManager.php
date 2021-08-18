@@ -7,6 +7,11 @@ use CharlGottschalk\FeatureToggleLumen\Transformers\Transformer;
 
 class FeatureManager
 {
+    public static function validationRules()
+    {
+        return Db::rules();
+    }
+
     public static function index($take, $page)
     {
         $results = Db::index($take, $page);

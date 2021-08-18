@@ -367,4 +367,11 @@ class Db implements DriverInterface
     {
         return new DbTransformer;
     }
+
+    public static function rules()
+    {
+        return [
+            'name' => 'required|unique:CharlGottschalk\FeatureToggleLumen\Models\Feature'
+        ];
+    }
 }

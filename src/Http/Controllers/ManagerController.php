@@ -32,9 +32,9 @@ class ManagerController extends BaseController
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:CharlGottschalk\FeatureToggleLumen\Models\Feature'
-        ]);
+        $rules = FeatureManager::validationRules();
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json(['error' => 'Validation failed']);

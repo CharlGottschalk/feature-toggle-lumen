@@ -4,6 +4,7 @@ namespace CharlGottschalk\FeatureToggleLumen\Drivers;
 
 interface DriverInterface
 {
+    public static function rules();
     public static function transformer();
     public static function index($take, $page);
     public static function show($id);
