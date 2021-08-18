@@ -2,8 +2,7 @@
 
 namespace CharlGottschalk\FeatureToggleLumen\Console;
 
-use CharlGottschalk\FeatureToggleLumen\Models\Feature;
-use CharlGottschalk\FeatureToggleLumen\Models\FeatureRole;
+use CharlGottschalk\FeatureToggleLumen\FeatureManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -15,21 +14,15 @@ class AddRoleToFeature extends Command
 
     public function handle()
     {
-        $feature = Str::of($this->argument('feature'))->lower()->snake();
+        $feature = $this->argument('feature');
         $role = $this->argument('role');
 
-        $featureModel = Feature::on(config('features.connection', config('database.default')))
-                            ->where('name', $feature)
-                            ->first();
+        $featureRole = config('features.roles.model')::where(config('features.roles.column'), $role)->first();
 
-        if (!empty($featureModel)) {
-            $featureRole = config('features.roles.model')::where(config('features.roles.column'), $role)->first();
-
-            $featureModel->roles()->attach($featureRole->id);
-
+        if (FeatureManager::attachRoleByName($feature, $featureRole->id)) {
             $this->info("Role ({$role}) added to feature ({$feature})");
         } else {
-            $this->info("Feature ({$feature}) does not exist");
+            $this->error("Feature ({$feature}) does not exist");
         }
     }
 }

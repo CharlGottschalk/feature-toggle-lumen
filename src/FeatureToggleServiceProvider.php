@@ -25,6 +25,10 @@ class FeatureToggleServiceProvider extends ServiceProvider
             return new Feature();
         });
 
+        $this->app->bind('featureManager', function($app) {
+            return new FeatureManager();
+        });
+
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'features');
     }
 
@@ -41,7 +45,6 @@ class FeatureToggleServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->registerCommands();
-//            $this->registerPublish();
         }
     }
 
@@ -55,12 +58,6 @@ class FeatureToggleServiceProvider extends ServiceProvider
             RemoveRoleFromFeature::class,
             ToggleFeature::class
         ]);
-    }
-
-    protected function registerPublish() {
-        $this->publishes([
-            __DIR__.'/../config/config.php' => config_path('features.php'),
-        ], 'config');
     }
 
     protected function registerRoutes()

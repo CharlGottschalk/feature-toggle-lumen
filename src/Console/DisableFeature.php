@@ -2,7 +2,7 @@
 
 namespace CharlGottschalk\FeatureToggleLumen\Console;
 
-use CharlGottschalk\FeatureToggleLumen\Models\Feature;
+use CharlGottschalk\FeatureToggleLumen\FeatureManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -14,18 +14,14 @@ class DisableFeature extends Command
 
     public function handle()
     {
-        $feature = Str::of($this->argument('feature'))->lower()->snake();
-        $featureModel = Feature::on(config('features.connection', config('database.default')))
-                                ->where('name', $feature)
-                                ->first();
+        $feature = $this->argument('feature');
+
+        $featureModel = FeatureManager::disableByName($feature);
 
         if (!empty($featureModel)) {
-            $featureModel->enabled = false;
-            $featureModel->save();
-
             $this->info("Feature ({$feature}) disabled");
         } else {
-            $this->info("Feature ({$feature}) does not exist");
+            $this->error("Feature ({$feature}) does not exist");
         }
     }
 }

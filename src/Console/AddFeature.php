@@ -2,7 +2,7 @@
 
 namespace CharlGottschalk\FeatureToggleLumen\Console;
 
-use CharlGottschalk\FeatureToggleLumen\Models\Feature;
+use CharlGottschalk\FeatureToggleLumen\FeatureManager;
 use Illuminate\Console\Command;
 
 class AddFeature extends Command
@@ -16,14 +16,17 @@ class AddFeature extends Command
         $feature = $this->argument('feature');
         $enabled = $this->argument('enabled') == 'true';
 
-        Feature::on(config('features.connection', config('database.default')))
-                ->insert([
-                    'name' => $feature,
-                    'enabled' => $enabled
-                ]);
+        $feature = FeatureManager::store([
+            'feature' => $feature,
+            'enabled' => $enabled
+        ]);
 
-        $state = $enabled ? 'enabled' : 'disabled';
+        if(empty($feature)) {
+            $this->error("Error storing feature");
+        } else {
+            $state = $enabled ? 'enabled' : 'disabled';
 
-        $this->info("Feature ({$feature}) created and {$state}");
+            $this->info("Feature ({$feature}) created and {$state}");
+        }
     }
 }
